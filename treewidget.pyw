@@ -10,7 +10,8 @@ from PySide6.QtWidgets import (
 
 from PySide6.QtGui import QIcon, QFont, QBrush, QColor
 from PySide6.QtCore import (QSize, Qt, QFile, QIODevice, QSaveFile,
-                            QByteArray, QDataStream,QMimeData)
+                            QByteArray, QDataStream,QMimeData,
+                            QModelIndex)
 
 import sys, uuid
 import resources
@@ -36,6 +37,7 @@ class TreeWidget(QTreeWidget):
 
     def dropMimeRead(self, index, out, parent):
 
+        
         font = QFont()
         icon = QIcon()
         foreground = QBrush()
@@ -52,10 +54,9 @@ class TreeWidget(QTreeWidget):
         toolTip = out.readQString()
         checkState = Qt.CheckState(out.readInt8())
         out >> sizeHint
-        flags = Qt.ItemFlag(out.readUInt32())
-
-        _index = self.indexFromItem(index)
-        column = _index.column()
+        flags = Qt.ItemFlag(out.readUInt32())        
+    
+        column = 0
         item = TreeWidgetItem()
         item.setIcon(column, icon)
         item.setText(column, text)
@@ -75,7 +76,6 @@ class TreeWidget(QTreeWidget):
 
         qb = QByteArray()
         out = QDataStream(qb, QIODevice.WriteOnly)
-
         
         
         for  index in indexes:            
@@ -102,6 +102,7 @@ class TreeWidget(QTreeWidget):
 
     def dropMimeData(self, parent, index, data, action):
 
+   
 
         if data.hasFormat('application/x-qabstractitemmodeldatalist'):
 
