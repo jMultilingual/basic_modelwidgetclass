@@ -1,0 +1,146 @@
+from PySide6.QtWidgets import (QApplication,
+                               QListWidgetItem,
+                               QListWidget,
+                               QStyledItemDelegate)
+from PySide6.QtGui import QIcon, QFont, QBrush, QColor
+from PySide6.QtCore import QSize, Qt
+import sys
+import resources
+
+class StyledItemDelegate(QStyledItemDelegate):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def initStyleOption(self, option, index):
+
+        super().initStyleOption(option, index)
+        row = index.row()
+        if row == 0:
+            option.decorationSize = QSize(50, 50)
+            option.font = QFont("Times New Roman", 18)
+
+        elif row == 1:
+            option.decorationSize = QSize(100, 100)
+            option.font = QFont("Segoe UI Light", 36)
+
+        elif row == 2:
+            option.decorationSize = QSize(150, 150)
+            option.font = QFont("Segoe UI Black", 54)
+            
+    
+    def paint(self, painter, option, index):
+        
+
+        super().paint(painter, option, index)
+
+    def sizeHint(self, option, index):
+
+        row = index.row()
+        if row == 0:
+            return QSize(50, 50)
+
+        elif row == 1:
+            return QSize(100, 100)
+
+        elif row == 2:
+            return QSize(150, 150)
+
+        return super().sizeHint(option, index)
+
+    def createEditor(self, parent, option, index):
+
+        lineEdit = super().createEditor(parent, option, index)
+        self.initStyleOption(option, index)
+        lineEdit.setFont(option.font)
+
+        return lineEdit
+
+    def updateEditorGeometry(self, editor, option, index):
+
+        editor.setGeometry(option.rect)
+    
+class ListWidget(QListWidget):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.addListWidgetItem(
+            QIcon(":/images/cat458A8400_TP_V4.jpg"),
+            "item0",
+            QFont("Times New Roman", 18),
+            QBrush(QColor(105, 171, 197)),
+            QBrush(QColor(237, 232, 150)),
+            Qt.AlignVCenter|Qt.AlignLeft,
+            "Tool Tip Neko1",
+            Qt.CheckState.Checked,
+            QSize(50, 50),
+            Qt.ItemIsEditable)     
+        
+
+        self.addListWidgetItem(
+            QIcon(":/images/HIRAkotatuneko_TP_V4.jpg"),
+            "item1",
+            QFont("Segoe UI Light", 36),
+            QBrush(QColor(246, 241, 214)),
+            QBrush(QColor(117, 101, 93)),
+            Qt.AlignVCenter|Qt.AlignHCenter,
+            "Tool Tip Neko1",
+            Qt.CheckState.PartiallyChecked,
+            QSize(100, 100),
+            Qt.ItemIsEditable)   
+        
+        self.addListWidgetItem(
+            QIcon(":/images/PPW_utatanewosuruneko_TP_V4.jpg"),
+            "item2",
+            QFont("Segoe UI Black", 72),
+            QBrush(QColor(176, 229, 213)),
+            QBrush(QColor(213, 187, 216)),
+            Qt.AlignVCenter|Qt.AlignRight,
+            "Tool Tip Neko1",
+            Qt.CheckState.PartiallyChecked,
+            QSize(150, 150),
+            Qt.ItemIsEditable)
+        
+        delegate = StyledItemDelegate()
+        self.setItemDelegate(delegate)
+
+        self.setIconSize(QSize(150, 150))  
+        self.show()
+
+    def addListWidgetItem(self,
+                          icon,
+                          text,
+                          font,
+                          foreground,
+                          background,
+                          alignment,
+                          toolTip,
+                          checkState,
+                          sizeHint,
+                          flags=Qt.ItemIsEnabled):
+        item = QListWidgetItem(
+            QIcon(icon), text)
+
+        item.setFont(font)
+        item.setForeground(foreground)
+        item.setBackground(background)
+        item.setTextAlignment(alignment)
+        item.setToolTip(toolTip)
+        item.setCheckState(checkState)
+        item.setSizeHint(sizeHint)
+        item.setFlags(item.flags()|flags)
+
+        self.addItem(item)
+        
+def main():
+
+    app = QApplication()
+
+    listWidget = ListWidget()  
+
+    sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()
+
